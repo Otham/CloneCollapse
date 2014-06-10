@@ -12,6 +12,15 @@
         	circle.y = 100;
         	stage.addChild(circle);
         	stage.update();
+        	
+         //Code added by Puru producing BLue rectangle
+         var shape = new createjs.Shape();
+ 		 shape.graphics.beginFill("blue").drawRect(0, 0, 100, 100);         
+ 		 shape.x = 150
+         shape.y = 150;
+         stage.addChild(shape);
+         stage.update();
+
         }
     </script>
 </head>
