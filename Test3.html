@@ -14,18 +14,31 @@
         	stage.update();
         	
          //Code added by Puru producing BLue rectangle
-         var shape = new createjs.Shape();
- 		 shape.graphics.beginFill("blue").drawRect(0, 0, 100, 100);         
- 		 shape.x = 150
-         shape.y = 150;
-         stage.addChild(shape);
-         stage.update();
-
+        	 var shape = new createjs.Shape();
+     		 shape.graphics.beginFill("blue").drawRect(0, 0, 100, 100);         
+     		 shape.x = 150
+             shape.y = 150;
+             stage.addChild(shape);
+             stage.update();
+    		//Code added by josh producing a black rectangle and a polygon
+            var shape2 = new createjs.Shape();
+         	shape2.graphics.beginFill("black").drawRect(0, 0, 120, 120);
+         	shape2.x = 150;
+         	shape2.y = 300;
+ 		    stage.addChild(shape2);
+            stage.update();
+            
+            var polygon = new createjs.Shape();
+            polygon.graphics.beginStroke("black");
+            polygon.graphics.moveTo(0, 460).lineTo(460, 460).lineTo(430, 500).lineTo(0, 460);
+            stage.addChild(polygon);
+            stage.update();
+            	
         }
     </script>
 </head>
 <body onLoad="init();">
-    <canvas id="demoCanvas" width="500" height="300">
+    <canvas id="demoCanvas" width="500" height="500">
         alternate content
     </canvas>
 </body>
