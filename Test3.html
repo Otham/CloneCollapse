@@ -11,8 +11,19 @@
         	circle.x = 100;
         	circle.y = 100;
         	stage.addChild(circle);
-        	stage.update();
-        	
+			stage.update();
+			
+			
+			// adding dots with a timer which executes every 50 milliseconds - Jonathan
+			var fillColors = ["red", "blue", "green", "yellow", "orange", "purple", "black", "pink", "brown", "silver", "white"];
+			setInterval(function(){
+				var repCircle = new createjs.Shape();
+				repCircle.graphics.beginFill(fillColors[parseInt(Math.random()*9)]).drawCircle(
+					Math.random() * 400, Math.random() * 400, Math.random() * 40, Math.random() * 60);
+				stage.addChild(repCircle);
+				stage.update();
+			},50);
+					
          //Code added by Puru producing BLue rectangle
         	 var shape = new createjs.Shape();
      		 shape.graphics.beginFill("blue").drawRect(0, 0, 100, 100);         
@@ -20,7 +31,8 @@
              shape.y = 150;
              stage.addChild(shape);
              stage.update();
-    		//Code added by josh producing a black rectangle and a polygon
+			 
+    	//Code added by josh producing a black rectangle and a polygon
             var shape2 = new createjs.Shape();
          	shape2.graphics.beginFill("black").drawRect(0, 0, 120, 120);
          	shape2.x = 150;
