@@ -8,31 +8,28 @@
     
     var stage; 
     
-    
-    
-    
+ 
         function init() {
             // code here.
-        	
-            var stage = new createjs.Stage("demoCanvas");
+        	stage = new createjs.Stage("demoCanvas");
+           
         	var circle = new createjs.Shape();
         	circle.graphics.beginFill("red").drawCircle(0, 0, 50);
         	circle.x = 100;
         	circle.y = 100;
         	
         
-            // createjs.Tween.get(circle,{loop:true}).to({x:450}, 3000).to({x:50}, 3000);//Run the tween movre back to brhhining
-        	
+            createjs.Tween.get(circle,{loop:true}).to({x:450}, 3000).to({x:50}, 3000); //Run the tween movre back to brhhining
         	//Ticker Class to create 
-        	//createjs.Ticker.addEventListener("tick", tick);
+        	createjs.Ticker.addEventListener("tick", tick);
         	stage.addChild(circle);
-        	stage.update();
+        	
         }
         
-        /*
+        
         function tick(event){
-        	
-        }*/
+        	stage.update();
+        }
         
         
     </script>
