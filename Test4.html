@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
+    <script>
+        function init() {
+            // code here.
+        	var stage = new createjs.Stage("demoCanvas");
+        	var circle = new createjs.Shape();
+        	circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+        	circle.x = 100;
+        	circle.y = 100;
+        	stage.addChild(circle);
+        	
+        
+        	createjs.Tween.get(ball,{loop:true}).to({x:450}, 3000).to({x:50}, 3000);//Run the tween movre back to brhhining
+        	
+        	//Ticker Class to create 
+        	createjs.Ticker.addEventListener("tick", tick);
+        	
+        }
+        
+        function tick(event){
+        	stage.update();
+        }
+        
+        
+    </script>
+    
+    
+</head>
+<body onLoad="init();">
+    <canvas id="demoCanvas" width="500" height="300">
+        alternate content
+    </canvas>
+</body>
+</html>
