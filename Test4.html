@@ -8,12 +8,13 @@
     
     var stage; 
     
-    var stage = new createjs.Stage("demoCanvas");
+    
     
     
         function init() {
             // code here.
         	
+            var stage = new createjs.Stage("demoCanvas");
         	var circle = new createjs.Shape();
         	circle.graphics.beginFill("red").drawCircle(0, 0, 50);
         	circle.x = 100;
@@ -26,9 +27,8 @@
         	//createjs.Ticker.addEventListener("tick", tick);
         	stage.addChild(circle);
         	stage.update();
-        	
-        	
         }
+        
         /*
         function tick(event){
         	
