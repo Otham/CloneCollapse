@@ -10,14 +10,13 @@
         	circle.graphics.beginFill("red").drawCircle(0, 0, 50);
         	circle.x = 100;
         	circle.y = 100;
-        	
+        	stage.addChild(circle);
         	
         
         	createjs.Tween.get(ball,{loop:true}).to({x:450}, 3000).to({x:50}, 3000);//Run the tween movre back to brhhining
         	
         	//Ticker Class to create 
         	createjs.Ticker.addEventListener("tick", tick);
-        	stage.addChild(circle);
         	
         }
         
