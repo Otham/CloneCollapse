@@ -5,52 +5,39 @@
     <script>
         function init() {
             // code here.
-        	var stage = new createjs.Stage("demoCanvas");
-        	var circle = new createjs.Shape();
-        	circle.graphics.beginFill("red").drawCircle(0, 0, 50);
-        	circle.x = 100;
-        	circle.y = 100;
-        	stage.addChild(circle);
-<<<<<<< HEAD
-        	
-        
-        	createjs.Tween.get(ball,{loop:true}).to({x:450}, 3000).to({x:50}, 3000);//Run the tween movre back to brhhining
-        	
-        	//Ticker Class to create 
-        	createjs.Ticker.addEventListener("tick", tick);
-        	
-        }
-        
-        function tick(event){
-        	stage.update();
-=======
-			stage.update();
-			
-			
-			// adding dots with a timer which executes every 50 milliseconds - Jonathan
-			var fillColors = ["red", "blue", "green", "yellow", "orange", "purple", "black", "pink", "brown", "silver", "white"];
-			setInterval(function(){
-				var repCircle = new createjs.Shape();
-				repCircle.graphics.beginFill(fillColors[parseInt(Math.random()*9)]).drawCircle(
-					Math.random() * 500, Math.random() * 500, Math.random() * 40, Math.random() * 60);
-				stage.addChild(repCircle);
-				stage.update();
-			},50);
-					
+         var stage = new createjs.Stage("demoCanvas");
+         var circle = new createjs.Shape();
+         circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+         circle.x = 100;
+         circle.y = 100;
+         stage.addChild(circle);
+stage.update();
+
+
+// adding dots with a timer which executes every 50 milliseconds - Jonathan
+var fillColors = ["red", "blue", "green", "yellow", "orange", "purple", "black", "pink", "brown", "silver", "white"];
+setInterval(function(){
+var repCircle = new createjs.Shape();
+repCircle.graphics.beginFill(fillColors[parseInt(Math.random()*9)]).drawCircle(
+Math.random() * 500, Math.random() * 500, Math.random() * 40, Math.random() * 60);
+stage.addChild(repCircle);
+stage.update();
+},50);
+
          //Code added by Puru producing BLue rectangle
-        	 var shape = new createjs.Shape();
-     		 shape.graphics.beginFill("blue").drawRect(0, 0, 100, 100);         
-     		 shape.x = 150
+         var shape = new createjs.Shape();
+      shape.graphics.beginFill("blue").drawRect(0, 0, 100, 100);
+      shape.x = 150
              shape.y = 150;
              stage.addChild(shape);
              stage.update();
-			 
-    	//Code added by josh producing a black rectangle and a polygon
+
+     //Code added by josh producing a black rectangle and a polygon
             var shape2 = new createjs.Shape();
-         	shape2.graphics.beginFill("black").drawRect(0, 0, 120, 120);
-         	shape2.x = 150;
-         	shape2.y = 300;
- 		    stage.addChild(shape2);
+          shape2.graphics.beginFill("black").drawRect(0, 0, 120, 120);
+          shape2.x = 150;
+          shape2.y = 300;
+  stage.addChild(shape2);
             stage.update();
             
             var polygon = new createjs.Shape();
@@ -58,14 +45,9 @@
             polygon.graphics.moveTo(0, 460).lineTo(460, 460).lineTo(430, 500).lineTo(0, 460);
             stage.addChild(polygon);
             stage.update();
-            	
->>>>>>> FETCH_HEAD
+            
         }
-        
-        
     </script>
-    
-    
 </head>
 <body onLoad="init();">
     <canvas id="demoCanvas" width="500" height="500">
@@ -73,3 +55,17 @@
     </canvas>
 </body>
 </html>
+
+    Status
+    API
+    Training
+    Shop
+    Blog
+    About
+
+    © 2014 GitHub, Inc.
+    Terms
+    Privacy
+    Security
+    Contact
+
