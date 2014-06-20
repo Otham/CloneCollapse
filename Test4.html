@@ -13,31 +13,36 @@
             // code here.
         	stage = new createjs.Stage("demoCanvas");
            
-        	var circle = new createjs.Shape();
-        	circle.graphics.beginFill("red").drawCircle(0, 0, 50);
-        	circle.x = 100;
-        	circle.y = 100;
-        	
-        
-            createjs.Tween.get(circle,{loop:true}).to({x:450}, 3000).to({x:50}, 3000); //Run the tween movre back to brhhining
-        	//Ticker Class to create 
-        	createjs.Ticker.addEventListener("tick", tick);
-        	stage.addChild(circle);
-        	
-        }
-        
-        
-        function tick(event){
-        	stage.update();
-        }
-        
+		   
+			for( var r=0; r<10; r++ ) 
+			{
+				for( var c=0; c<10; c++ )
+				{
+					var circle = new createjs.Shape();
+					circle.graphics.beginFill("red").drawCircle(0, 0, 25);
+					circle.x = c * 50;
+					circle.y = r * 50;
+					stage.addChild(circle);
+					stage.update();
+				}
+			}
+			document.getElementById("demoCanvas").onclick=function(e){
+				//alert("You clicked me!!" + e.target + " " + e.clientX + ", " + e.clientY);
+					var circle = new createjs.Shape();
+					circle.graphics.beginFill("blue").drawCircle(0, 0, 20);
+					circle.x = e.clientX;
+					circle.y = e.clientY;
+					stage.addChild(circle);
+					stage.update();
+			};;
+        }        
         
     </script>
     
     
 </head>
 <body onLoad="init();">
-    <canvas id="demoCanvas" width="500" height="300">
+    <canvas id="demoCanvas" width="500" height="500">
         alternate content
     </canvas>
 </body>
