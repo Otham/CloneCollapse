@@ -4,41 +4,100 @@
 <meta charset="UTF-8"> </meta>
 
     <script src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
-    <script>
+	<style type="text/css">
+		body
+		{
+			margin:0;
+			padding:0;
+		};
+	</style>
+    <script type="text/javascript">
+	
     
     var stage; 
-    
- 
+	var sprites;
+    var spriteColors = ["Red", "Green", "Blue","Yellow", "Orange", "Purple"];
+	var screenWidth = 600;
+	var screenHeight = 800;
+	var gridX = 12;
+	var gridY = 16;
+	var	gridWidth = screenWidth / gridX;
+	var gridHeight = screenHeight / gridY;
+	
         function init() {
             // code here.
-        	stage = new createjs.Stage("demoCanvas");
-           
-        	var circle = new createjs.Shape();
-        	circle.graphics.beginFill("red").drawCircle(0, 0, 50);
-        	circle.x = 100;
-        	circle.y = 100;
-        	
-        
-            createjs.Tween.get(circle,{loop:true}).to({x:450}, 3000).to({x:50}, 3000); //Run the tween movre back to brhhining
-        	//Ticker Class to create 
-        	createjs.Ticker.addEventListener("tick", tick);
-        	stage.addChild(circle);
-        	
-        }
-        
-        
-        function tick(event){
-        	stage.update();
-        }
-        
+        	stage = new createjs.Stage("canvas");
+			//stage.graphics.beginFill("aqua");
+			sprites = [];
+			cells = [];
+			var i = 0;
+			
+			for( var r=0; r<16; r++ ) 
+			{
+				cells[r] = [];
+				for( var c=0; c<12; c++ )
+				{
+					cells[r][c] = new Object();
+					cells[r][c].sprite = null;
+					
+					if( Math.random() * 192 > 100 )
+					{
+
+						sprites[i] = new Object();					
+						var circle = new createjs.Shape();
+						circle.graphics.beginStroke("black").beginFill(spriteColors[parseInt(Math.random() * 6)]).drawCircle(0, 0, 25);
+						circle.x = c * gridWidth + gridWidth/2;
+						circle.y = r * gridHeight + gridHeight/2;
+						sprites[i].circle = circle;
+						sprites[i].stepX = 6 - Math.random() * 12;
+						sprites[i].stepY = 6 - Math.random() * 12;	
+						sprites[i].active = false;
+						stage.addChild(circle);
+						
+						cells[r][c].sprite = sprites[i];
+						i++;
+					}
+				}
+			}
+			document.getElementById("canvas").onclick=function(e){
+				var gx, gy;
+				gx = parseInt(e.clientX / gridWidth);
+				gy = parseInt(e.clientY / gridHeight);
+				//if( cells[gy][gx].sprite != null )
+				//	alert( "I have a sprite!!!");
+				cells[gy][gx].sprite.active = true;
+				
+				
+				//alert( parseInt(gy) + ", " + parseInt(gx) );	
+			};
+			setInterval(function()
+			{
+				for( var i = 0; i<sprites.length; i++ )
+				{
+					if( sprites[i].active == false )
+						continue;
+					sprites[i].circle.x = sprites[i].circle.x + sprites[i].stepX;
+					sprites[i].circle.y = sprites[i].circle.y + sprites[i].stepY;
+					if( sprites[i].circle.x > 575 || sprites[i].circle.x < 25)
+					{
+						sprites[i].stepX = -sprites[i].stepX;
+					}
+					if( sprites[i].circle.y > 775 || sprites[i].circle.y < 25 )
+					{
+						sprites[i].stepY = -sprites[i].stepY;
+					}
+				}
+				stage.update();
+			},50);			
+		}
         
     </script>
     
     
 </head>
 <body onLoad="init();">
-    <canvas id="demoCanvas" width="500" height="300">
-        alternate content
-    </canvas>
+		<canvas id="canvas" width="600" height="800"
+			style="border:2px solid #000000;">
+		</canvas> 
 </body>
 </html>
