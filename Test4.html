@@ -38,6 +38,9 @@
 				for( var c=0; c<12; c++ )
 				{
 					cells[r][c] = new Object();
+					cells[r][c].x = c * gridWidth + gridWidth/2;
+					cells[r][c].y = r * gridHeight + gridHeight/2;
+
 					cells[r][c].sprite = null;
 					
 					if( Math.random() * 192 > 100 )
@@ -46,12 +49,15 @@
 						sprites[i] = new Object();					
 						var circle = new createjs.Shape();
 						circle.graphics.beginStroke("black").beginFill(spriteColors[parseInt(Math.random() * 6)]).drawCircle(0, 0, 25);
-						circle.x = c * gridWidth + gridWidth/2;
-						circle.y = r * gridHeight + gridHeight/2;
+						circle.x = cells[r][c].x;
+						circle.y = cells[r][c].y;
 						sprites[i].circle = circle;
-						sprites[i].stepX = 6 - Math.random() * 12;
-						sprites[i].stepY = 6 - Math.random() * 12;	
+						//sprites[i].stepX = 6 - Math.random() * 12;
+						//sprites[i].stepY = 6 - Math.random() * 12;	
 						sprites[i].active = false;
+						sprites[i].goalX = 0;
+						sprites[i].goalY = 0;
+						sprites[i].lifeTime = 0;
 						stage.addChild(circle);
 						
 						cells[r][c].sprite = sprites[i];
@@ -65,8 +71,30 @@
 				gy = parseInt(e.clientY / gridHeight);
 				//if( cells[gy][gx].sprite != null )
 				//	alert( "I have a sprite!!!");
-				cells[gy][gx].sprite.active = true;
-				
+				if( cells[gy][gx].sprite.active == false )
+					cells[gy][gx].sprite.active = true;
+				else
+					cells[gy][gx].sprite.active = false;
+					
+				for( var i=0; i<cells.length; i++ )
+				{
+					for( var j=0; j<cells[i].length; j++ )
+					{
+						if( cells[i][j].sprite == null )
+						{
+							cells[gy][gx].sprite.stepX = (cells[i][j].x - cells[gy][gx].x) / 20;
+							cells[gy][gx].sprite.stepY = (cells[i][j].y - cells[gy][gx].y) / 20;
+							cells[gy][gx].sprite.lifeTime = 20;
+							cells[gy][gx].goalX	= cells[i][j].x;		
+							cells[gy][gx].goalY	= cells[i][j].y;	
+							cells[i][j].sprite = cells[gy][gx].sprite;
+							cells[gy][gx].sprite = null;
+							i = cells.length;
+							j = cells[0].length;
+						}
+					}
+				}
+					
 				
 				//alert( parseInt(gy) + ", " + parseInt(gx) );	
 			};
@@ -76,8 +104,15 @@
 				{
 					if( sprites[i].active == false )
 						continue;
+					sprites[i].lifeTime--;
+					if( sprites[i].lifeTime <= 0 )
+					{
+						sprites[i].active = false;
+					}
 					sprites[i].circle.x = sprites[i].circle.x + sprites[i].stepX;
 					sprites[i].circle.y = sprites[i].circle.y + sprites[i].stepY;
+					
+					
 					if( sprites[i].circle.x > 575 || sprites[i].circle.x < 25)
 					{
 						sprites[i].stepX = -sprites[i].stepX;
@@ -85,7 +120,7 @@
 					if( sprites[i].circle.y > 775 || sprites[i].circle.y < 25 )
 					{
 						sprites[i].stepY = -sprites[i].stepY;
-					}
+					}					
 				}
 				stage.update();
 			},50);			
