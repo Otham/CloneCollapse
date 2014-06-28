@@ -48,7 +48,9 @@
 
 						sprites[i] = new Object();					
 						var circle = new createjs.Shape();
-						circle.graphics.beginStroke("black").beginFill(spriteColors[parseInt(Math.random() * 6)]).drawCircle(0, 0, 25);
+						var color = parseInt(Math.random() * 6);
+						circle.graphics.beginStroke("black").beginFill(spriteColors[color]).drawCircle(0, 0, 25);
+						
 						circle.x = cells[r][c].x;
 						circle.y = cells[r][c].y;
 						sprites[i].circle = circle;
@@ -58,6 +60,7 @@
 						sprites[i].goalX = 0;
 						sprites[i].goalY = 0;
 						sprites[i].lifeTime = 0;
+						sprites[i].value = color;
 						stage.addChild(circle);
 						
 						cells[r][c].sprite = sprites[i];
@@ -69,31 +72,59 @@
 				var gx, gy;
 				gx = parseInt(e.clientX / gridWidth);
 				gy = parseInt(e.clientY / gridHeight);
-				//if( cells[gy][gx].sprite != null )
-				//	alert( "I have a sprite!!!");
-				if( cells[gy][gx].sprite.active == false )
-					cells[gy][gx].sprite.active = true;
-				else
-					cells[gy][gx].sprite.active = false;
-					
-				for( var i=0; i<cells.length; i++ )
+				
+				if( cells[gy][gx].sprite == null )
+					return;
+													
+				stage.removeChild(cells[gy][gx].sprite.circle);
+				cells[gy][gx].sprite = null;
+				
+				var newGy = gy - 1;
+				
+				while( newGy >= 0 )
+				{
+					if(cells[newGy][gx].sprite == null)
+					{
+						newGy--;
+						continue;
+					}
+					var destY = -1;
+					for( var y = gy+1; gy < gridY && destY == -1; y++ )
+					{
+						if( cells[y][gx].sprite != null )
+						{
+							destY = y - 1;
+						}
+					}
+					cells[newGy][gx].sprite.stepX = (cells[destY][gx].x - cells[newGy][gx].x) / 10;
+					cells[newGy][gx].sprite.stepY = (cells[destY][gx].y - cells[newGy][gx].y) / 10;
+					cells[newGy][gx].sprite.lifeTime = 10;
+					cells[newGy][gx].sprite.active = true;
+					cells[destY][gx].sprite = cells[newGy][gx].sprite;
+					cells[newGy][gx].sprite = null;
+					gy = newGy;
+					newGy--;
+				}
+				
+				
+				/*for( var i=0; i<cells.length; i++ )
 				{
 					for( var j=0; j<cells[i].length; j++ )
 					{
 						if( cells[i][j].sprite == null )
 						{
-							cells[gy][gx].sprite.stepX = (cells[i][j].x - cells[gy][gx].x) / 20;
-							cells[gy][gx].sprite.stepY = (cells[i][j].y - cells[gy][gx].y) / 20;
-							cells[gy][gx].sprite.lifeTime = 20;
+							cells[gy][gx].sprite.stepX = (cells[i][j].x - cells[gy][gx].x) / 10;
+							cells[gy][gx].sprite.stepY = (cells[i][j].y - cells[gy][gx].y) / 10;
+							cells[gy][gx].sprite.lifeTime = 10;
 							cells[gy][gx].goalX	= cells[i][j].x;		
 							cells[gy][gx].goalY	= cells[i][j].y;	
 							cells[i][j].sprite = cells[gy][gx].sprite;
 							cells[gy][gx].sprite = null;
-							i = cells.length;
+							i = cells.length-1;
 							j = cells[0].length;
 						}
 					}
-				}
+				}*/
 					
 				
 				//alert( parseInt(gy) + ", " + parseInt(gx) );	
