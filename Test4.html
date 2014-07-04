@@ -15,7 +15,6 @@
 	
     
     var stage; 
-<<<<<<< HEAD
 	var cells;
 	var sprites;
     var spriteColors = ["Red", "Green", "Blue","Yellow", "Orange", "Purple"];
@@ -68,36 +67,12 @@
 			{
 				cells[r] = new Array(gridX);
 				for( var c=0; c<gridX; c++ )
-=======
-	var sprites;
-    var spriteColors = ["Red", "Green", "Blue","Yellow", "Orange", "Purple"];
-	var screenWidth = 600;
-	var screenHeight = 800;
-	var gridX = 12;
-	var gridY = 16;
-	var	gridWidth = screenWidth / gridX;
-	var gridHeight = screenHeight / gridY;
-	
-        function init() {
-            // code here.
-        	stage = new createjs.Stage("canvas");
-			//stage.graphics.beginFill("aqua");
-			sprites = [];
-			cells = [];
-			var i = 0;
-			
-			for( var r=0; r<16; r++ ) 
-			{
-				cells[r] = [];
-				for( var c=0; c<12; c++ )
->>>>>>> origin/master
 				{
 					cells[r][c] = new Object();
 					cells[r][c].x = c * gridWidth + gridWidth/2;
 					cells[r][c].y = r * gridHeight + gridHeight/2;
 
 					cells[r][c].sprite = null;
-<<<<<<< HEAD
 					cells[r][c].transition = 0;
 					
 					if( r < fillRow && r > fillRow - 3)
@@ -112,42 +87,11 @@
 				
 				var gx, gy;
 				
-=======
-					
-					if( Math.random() * 192 > 100 )
-					{
-
-						sprites[i] = new Object();					
-						var circle = new createjs.Shape();
-						var color = parseInt(Math.random() * 6);
-						circle.graphics.beginStroke("black").beginFill(spriteColors[color]).drawCircle(0, 0, 25);
-						
-						circle.x = cells[r][c].x;
-						circle.y = cells[r][c].y;
-						sprites[i].circle = circle;
-						//sprites[i].stepX = 6 - Math.random() * 12;
-						//sprites[i].stepY = 6 - Math.random() * 12;	
-						sprites[i].active = false;
-						sprites[i].goalX = 0;
-						sprites[i].goalY = 0;
-						sprites[i].lifeTime = 0;
-						sprites[i].value = color;
-						stage.addChild(circle);
-						
-						cells[r][c].sprite = sprites[i];
-						i++;
-					}
-				}
-			}
-			document.getElementById("canvas").onclick=function(e){
-				var gx, gy;
->>>>>>> origin/master
 				gx = parseInt(e.clientX / gridWidth);
 				gy = parseInt(e.clientY / gridHeight);
 				
-				if( cells[gy][gx].sprite == null )
+				if( gy == fillRow || cells[gy][gx].sprite == null )
 					return;
-<<<<<<< HEAD
 				clicked = true;
 				//alert( "Clicked!");
 													
@@ -214,64 +158,6 @@
 			{
 				if( clicked )
 					return;
-=======
-													
-				stage.removeChild(cells[gy][gx].sprite.circle);
-				cells[gy][gx].sprite = null;
-				
-				var newGy = gy - 1;
-				
-				while( newGy >= 0 )
-				{
-					if(cells[newGy][gx].sprite == null)
-					{
-						newGy--;
-						continue;
-					}
-					var destY = -1;
-					for( var y = gy+1; gy < gridY && destY == -1; y++ )
-					{
-						if( cells[y][gx].sprite != null )
-						{
-							destY = y - 1;
-						}
-					}
-					cells[newGy][gx].sprite.stepX = (cells[destY][gx].x - cells[newGy][gx].x) / 10;
-					cells[newGy][gx].sprite.stepY = (cells[destY][gx].y - cells[newGy][gx].y) / 10;
-					cells[newGy][gx].sprite.lifeTime = 10;
-					cells[newGy][gx].sprite.active = true;
-					cells[destY][gx].sprite = cells[newGy][gx].sprite;
-					cells[newGy][gx].sprite = null;
-					gy = newGy;
-					newGy--;
-				}
-				
-				
-				/*for( var i=0; i<cells.length; i++ )
-				{
-					for( var j=0; j<cells[i].length; j++ )
-					{
-						if( cells[i][j].sprite == null )
-						{
-							cells[gy][gx].sprite.stepX = (cells[i][j].x - cells[gy][gx].x) / 10;
-							cells[gy][gx].sprite.stepY = (cells[i][j].y - cells[gy][gx].y) / 10;
-							cells[gy][gx].sprite.lifeTime = 10;
-							cells[gy][gx].goalX	= cells[i][j].x;		
-							cells[gy][gx].goalY	= cells[i][j].y;	
-							cells[i][j].sprite = cells[gy][gx].sprite;
-							cells[gy][gx].sprite = null;
-							i = cells.length-1;
-							j = cells[0].length;
-						}
-					}
-				}*/
-					
-				
-				//alert( parseInt(gy) + ", " + parseInt(gx) );	
-			};
-			setInterval(function()
-			{
->>>>>>> origin/master
 				for( var i = 0; i<sprites.length; i++ )
 				{
 					if( sprites[i].active == false )
@@ -280,7 +166,6 @@
 					if( sprites[i].lifeTime <= 0 )
 					{
 						sprites[i].active = false;
-<<<<<<< HEAD
 						var r = sprites[i].cellR;
 						var c = sprites[i].cellC;
 						cells[r][c].sprite = sprites[i];
@@ -288,21 +173,6 @@
 					}
 					sprites[i].circle.x = sprites[i].circle.x + sprites[i].stepX;
 					sprites[i].circle.y = sprites[i].circle.y + sprites[i].stepY;
-=======
-					}
-					sprites[i].circle.x = sprites[i].circle.x + sprites[i].stepX;
-					sprites[i].circle.y = sprites[i].circle.y + sprites[i].stepY;
-					
-					
-					if( sprites[i].circle.x > 575 || sprites[i].circle.x < 25)
-					{
-						sprites[i].stepX = -sprites[i].stepX;
-					}
-					if( sprites[i].circle.y > 775 || sprites[i].circle.y < 25 )
-					{
-						sprites[i].stepY = -sprites[i].stepY;
-					}					
->>>>>>> origin/master
 				}
 				stage.update();
 			},50);			
@@ -313,13 +183,8 @@
     
 </head>
 <body onLoad="init();">
-<<<<<<< HEAD
 		<canvas id="canvas"
 			style="border:2px solid #000000; background-color:LightBlue">
-=======
-		<canvas id="canvas" width="600" height="800"
-			style="border:2px solid #000000;">
->>>>>>> origin/master
 		</canvas> 
 </body>
 </html>
