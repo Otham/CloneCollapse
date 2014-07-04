@@ -1,17 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"> </meta>
-
-    <script src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
-	<style type="text/css">
-		body
-		{
-			margin:0;
-			padding:0;
-		};
-	</style>
-    <script type="text/javascript">
 	
     
     var stage; 
@@ -95,6 +81,7 @@
 				clicked = true;
 				//alert( "Clicked!");
 													
+				clickSound();
 				stage.removeChild(cells[gy][gx].sprite.circle);
 				
 				cells[gy][gx].sprite = null;
@@ -152,7 +139,7 @@
 					spriteCount++;
 					fillRowX = fillRowX + 1;
 				}
-			}, 3000);
+			}, 300);
 			
 			setInterval(function()
 			{
@@ -175,16 +162,5 @@
 					sprites[i].circle.y = sprites[i].circle.y + sprites[i].stepY;
 				}
 				stage.update();
-			},500);			
+			},20);			
 		}
-        
-    </script>
-    
-    
-</head>
-<body onLoad="init();">
-		<canvas id="canvas"
-			style="border:2px solid #000000; background-color:LightBlue">
-		</canvas> 
-</body>
-</html>
