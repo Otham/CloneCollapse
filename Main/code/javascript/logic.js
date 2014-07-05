@@ -11,33 +11,22 @@
 	var fillRow = gridY - 1;
 	var fillRowX = 0;
 	var spriteCount = 0;
+	var pause = 0;
 	
 	var	gridWidth = screenWidth / gridX;
 	var gridHeight = screenHeight / gridY;
 	var clicked = false;
 	
-	function newSprite(locY, locX, color){
+	function pauseGame()
+	{
+		pause = 1-pause;
+	}
 	
-		sprites[spriteCount] = new Object();					
-						var circle = new createjs.Shape();
-						var color = parseInt(Math.random() * 6);
-						circle.graphics.beginStroke("black").beginFill(spriteColors[color]).drawCircle(0, 0, 25);
-						
-						circle.x = cells[locY][locX].x;
-						circle.y = cells[locY][locX].y;
-						sprites[spriteCount].circle = circle;
-						sprites[spriteCount].active = false;
-						sprites[spriteCount].cellC = 0;
-						sprites[spriteCount].cellR = 0;
-						sprites[spriteCount].lifeTime = 0;
-						sprites[spriteCount].value = color;
-						stage.addChild(circle);
-	
-		}
 		
         function init() 
 		{
             // code here.
+			alert( supportsAudio());
         	stage = new createjs.Stage("canvas");
 			var htmlStage = document.getElementById("canvas");
 			htmlStage.width = screenWidth;
@@ -63,7 +52,7 @@
 					
 					if( r < fillRow && r > fillRow - 3)
 					{
-						newSprite(r, c, 3);
+						sprites[spriteCount] = createSprite(r, c);
 						cells[r][c].sprite = sprites[spriteCount];
 						spriteCount++;
 					}
@@ -79,11 +68,13 @@
 				if( gy == fillRow || cells[gy][gx].sprite == null )
 					return;
 				clicked = true;
-				//alert( "Clicked!");
 													
-				clickSound();
-				stage.removeChild(cells[gy][gx].sprite.circle);
-				
+				var removed = stage.removeChild(cells[gy][gx].sprite.circle);
+				if( !removed )
+					alert( "Shape not removed!!" );
+				cells[gy][gx].sprite.circle = null;
+				cells[gy][gx].sprite.x = 0;
+				cells[gy][gx].sprite.y = 0;
 				cells[gy][gx].sprite = null;
 				
 				var prevY;
@@ -115,35 +106,39 @@
 			
 			
 			setInterval( function() {
-			if( fillRowX == gridX )
-					{
-						fillRowX = 0;
-						/* push up */
-						for( var r = 1; r<gridY; r++ )
-						{
-							for( var c=0; c<gridX; c++ )
-							{
-								cells[r-1][c].sprite = cells[r][c].sprite;
-							}
-						}
-						for( var i=0; i<spriteCount; i++ )
-						{
-							sprites[i].circle.y -= gridHeight;						
-						}
-					
-					}
-			else	if( fillRowX < gridX )
+				if( pause > 0 || clicked == true ) return;
+				clicked = true;
+				if( fillRowX == gridX )  //filled in bottom row
 				{
-					newSprite(fillRow, fillRowX, 0);
+					fillRowX = 0;
+					/* push up */
+					for( var r = 1000; r<gridY; r++ )
+					{
+						for( var c=0; c<gridX; c++ )
+						{
+							cells[r-1][c].sprite = cells[r][c].sprite;
+							cells[r-1][c].transition = cells[r][c].transition;
+						}
+					}
+					for( var i=spriteCount; i<spriteCount; i++ )
+					{
+						if( sprites[i] != null && sprites[i].circle != null )
+							sprites[i].circle.y -= gridHeight;						
+					}
+				}
+				else	if( fillRowX < gridX )
+				{
+					sprites[spriteCount] = createSprite(fillRow, fillRowX);
 					cells[fillRow][fillRowX].sprite = sprites[spriteCount];
 					spriteCount++;
 					fillRowX = fillRowX + 1;
 				}
+				clicked = false;
 			}, 300);
 			
 			setInterval(function()
 			{
-				if( clicked )
+				if( clicked || pause > 0 )
 					return;
 				for( var i = 0; i<sprites.length; i++ )
 				{
