@@ -22,7 +22,41 @@
 		pause = 1-pause;
 	}
 	
-		
+	function removeSprite(r, c)
+	{
+		var removed = stage.removeChild(cells[r][c].sprite.circle);
+		if( !removed )
+			alert( "Shape not removed!!" );
+		cells[r][c].sprite.circle = null;
+		cells[r][c].sprite.x = 0;
+		cells[r][c].sprite.y = 0;
+		cells[r][c].sprite = null;
+				
+		var prevY;
+				
+		for( prevY=r-1;prevY >= 0;prevY-- )
+		{
+			if(cells[prevY][c].sprite == null)
+			{
+				continue;
+			}
+			var destY = fillRow-1;
+			while( cells[destY][c].sprite != null || cells[destY][c].transition != 0)
+			{
+				destY--;
+			}
+			cells[prevY][c].sprite.stepX = (cells[destY][c].x - cells[prevY][c].x) / 10;
+			cells[prevY][c].sprite.stepY = (cells[destY][c].y - cells[prevY][c].y) / 10;
+			cells[prevY][c].sprite.lifeTime = 10;
+			cells[prevY][c].sprite.cellC = c;
+			cells[prevY][c].sprite.cellR = destY;
+			cells[prevY][c].sprite.active = true;
+			cells[destY][c].transition = 1;
+			cells[prevY][c].sprite = null;
+			gy = prevY;
+			//prevY--;
+		}
+	}
         function init() 
 		{
             // code here.
@@ -50,7 +84,7 @@
 					cells[r][c].sprite = null;
 					cells[r][c].transition = 0;
 					
-					if( r < fillRow && r > fillRow - 3)
+					if( r < fillRow && r > fillRow - 30)
 					{
 						sprites[spriteCount] = createSprite(r, c);
 						cells[r][c].sprite = sprites[spriteCount];
@@ -68,39 +102,10 @@
 				if( gy == fillRow || cells[gy][gx].sprite == null )
 					return;
 				clicked = true;
+				
+				//if( cells[gy][gx].sprite.value == cells[gy][gx+1].sprite.value )
+				removeSprite(gy, gx);
 													
-				var removed = stage.removeChild(cells[gy][gx].sprite.circle);
-				if( !removed )
-					alert( "Shape not removed!!" );
-				cells[gy][gx].sprite.circle = null;
-				cells[gy][gx].sprite.x = 0;
-				cells[gy][gx].sprite.y = 0;
-				cells[gy][gx].sprite = null;
-				
-				var prevY;
-				
-				for( prevY=gy-1;prevY >= 0;prevY-- )
-				{
-					if(cells[prevY][gx].sprite == null)
-					{
-						continue;
-					}
-					var destY = fillRow-1;
-					while( cells[destY][gx].sprite != null || cells[destY][gx].transition != 0)
-					{
-						destY--;
-					}
-					cells[prevY][gx].sprite.stepX = (cells[destY][gx].x - cells[prevY][gx].x) / 10;
-					cells[prevY][gx].sprite.stepY = (cells[destY][gx].y - cells[prevY][gx].y) / 10;
-					cells[prevY][gx].sprite.lifeTime = 10;
-					cells[prevY][gx].sprite.cellC = gx;
-					cells[prevY][gx].sprite.cellR = destY;
-					cells[prevY][gx].sprite.active = true;
-					cells[destY][gx].transition = 1;
-					cells[prevY][gx].sprite = null;
-					gy = prevY;
-					//prevY--;
-				}
 				clicked = false;
 			};
 			
