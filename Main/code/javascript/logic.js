@@ -92,6 +92,9 @@
 					}
 				}
 			}
+			
+			
+			
 			document.getElementById("canvas").onclick=function(e) {
 				
 				var gx, gy;
@@ -102,6 +105,9 @@
 				if( gy == fillRow || cells[gy][gx].sprite == null )
 					return;
 				clicked = true;
+				//document.getElementById('audiotag1').play();
+
+				clickSound('audiotag1');
 				
 				//if( cells[gy][gx].sprite.value == cells[gy][gx+1].sprite.value )
 				removeSprite(gy, gx);
