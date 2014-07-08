@@ -109,7 +109,20 @@
 
 				clickSound('audiotag1');
 				
-				//if( cells[gy][gx].sprite.value == cells[gy][gx+1].sprite.value )
+				for( var x = gx + 1; x < gridX; x++ )
+				{
+					if( cells[gy][x].sprite != null && cells[gy][gx].sprite.value == cells[gy][x].sprite.value )
+						removeSprite(gy, x);
+					else 
+						break;
+				}
+				for( var x = gx - 1; x >= 0; x-- )
+				{
+					if( cells[gy][x].sprite != null && cells[gy][gx].sprite.value == cells[gy][x].sprite.value )
+						removeSprite(gy, x);
+					else 
+						break;
+				}
 				removeSprite(gy, gx);
 													
 				clicked = false;
