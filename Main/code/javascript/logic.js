@@ -12,7 +12,8 @@
 	var fillRowX = 0;
 	var spriteCount = 0;
 	var pause = 0;
-	
+	var	context2D;
+
 	var	gridWidth = screenWidth / gridX;
 	var gridHeight = screenHeight / gridY;
 	var clicked = false;
@@ -65,6 +66,8 @@
 			var htmlStage = document.getElementById("canvas");
 			htmlStage.width = screenWidth;
 			htmlStage.height = screenHeight;
+			context2D = canvas.getContext("2d");
+
 			
 			
 			//stage.graphics.beginFill("aqua");
@@ -105,7 +108,9 @@
 				if( gy == fillRow || cells[gy][gx].sprite == null )
 					return;
 				clicked = true;
-				//document.getElementById('audiotag1').play();
+				
+				createBasicExplosion(gx, gy, spriteColors[cells[gy][gx].sprite.value]);
+
 
 				clickSound('audiotag1');
 				
@@ -158,7 +163,7 @@
 					fillRowX = fillRowX + 1;
 				}
 				clicked = false;
-			}, 300);
+			}, 300000);
 			
 			setInterval(function()
 			{
