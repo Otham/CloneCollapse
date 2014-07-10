@@ -1,10 +1,22 @@
 ﻿	var particles = [];
+	function randomFloat (min, max)
+	{
+		return min + Math.random()*(max-min);
+	}
 
-	// starting the game loop at 60 frames per second
+	// starting the game loop at 50 frames per second
 	var frameRate = 50.0;
 	var frameDelay = 1000.0/frameRate;
 
-	
+	//create color of second explosion
+	function createColor()
+	{
+		var expColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+		//alert(expColor);
+		return expColor;
+
+
+	}
 	
 	/*
 	 * A single explosion particle
@@ -55,14 +67,26 @@
 	}
 	
 	/*
-	 * Basic Explosion, all particles move and shrink at the same speed.
+	 * Basic Explosion, all particles move and shrink at the random speed.
 	 * 
 	 * Parameter : explosion center
 	 */
 	function createBasicExplosion(x, y, c)
 	{
-		// creating 4 particles that scatter at 0, 90, 180 and 270 degrees
-		for (var angle=0; angle<360; angle+=90)
+		var minSize = 10;
+		var maxSize = 30;
+		var count = 10;
+		var minSpeed = 60.0;
+		var maxSpeed = 200.0;
+		var minScaleSpeed = 1.0;
+		var maxScaleSpeed = 4.0;
+		if (particles.length > 10)
+			particles.length = 0;
+		
+
+		// creating 4 particles that scatter randomly
+		for (var angle=0; angle<360; angle+= Math.round(360/count))
+
 		{
 			var particle = new Particle();
 			var dx = x*50+25;
@@ -74,10 +98,19 @@
 			particle.x = dx;
 			particle.y = dy;
 			
+			particle.radius = randomFloat(minSize, maxSize);
+			
 			particle.color = c;
 			
-			var speed = 50.0;
+			particle.scaleSpeed = randomFloat(minScaleSpeed, maxScaleSpeed);
 			
+			var speed = randomFloat(minSpeed, maxSpeed);
+
+			
+			/*particle.color = c;
+			
+			var speed = 50.0;
+			*/
 			// velocity is rotated by "angle"
 			particle.velocityX = speed * Math.cos(angle * Math.PI / 180.0);
 			particle.velocityY = speed * Math.sin(angle * Math.PI / 180.0);
@@ -85,6 +118,7 @@
 			// adding the newly created particle to the "particles" array
 			particles.push(particle);
 		}
+		
 		
 		
 		setInterval(function()

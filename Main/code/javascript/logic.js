@@ -1,6 +1,4 @@
-	
-    
-    var stage; 
+	var stage; 
 	var cells;
 	var sprites;
     var spriteColors = ["Red", "Green", "Blue","Yellow", "Orange", "Purple"];
@@ -13,7 +11,6 @@
 	var spriteCount = 0;
 	var pause = 0;
 	var	context2D;
-
 	var	gridWidth = screenWidth / gridX;
 	var gridHeight = screenHeight / gridY;
 	var clicked = false;
@@ -58,6 +55,8 @@
 			//prevY--;
 		}
 	}
+	
+	
         function init() 
 		{
             // code here.
@@ -110,6 +109,8 @@
 				clicked = true;
 				
 				createBasicExplosion(gx, gy, spriteColors[cells[gy][gx].sprite.value]);
+				//alert(particles.length);
+				//createBasicExplosion(gx-.05, gy-.05, createColor());
 
 
 				clickSound('audiotag1');
