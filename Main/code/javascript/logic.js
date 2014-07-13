@@ -8,10 +8,12 @@
 	var screenHeight = 650;
 	var gridX = 12;
 	var gridY = 13;
-	var fillRow = gridY - 1;
+	var fillRow = 12;
 	var fillRowX = 0;
 	var spriteCount = 0;
 	var pause = 0;
+	
+	var path;
 	
 	var	gridWidth = screenWidth / gridX;
 	var gridHeight = screenHeight / gridY;
@@ -32,6 +34,7 @@
 		cells[r][c].sprite.y = 0;
 		cells[r][c].sprite = null;
 				
+		return;		
 		var prevY;
 				
 		for( prevY=r-1;prevY >= 0;prevY-- )
@@ -45,34 +48,84 @@
 			{
 				destY--;
 			}
-			cells[prevY][c].sprite.stepX = (cells[destY][c].x - cells[prevY][c].x) / 10;
-			cells[prevY][c].sprite.stepY = (cells[destY][c].y - cells[prevY][c].y) / 10;
-			cells[prevY][c].sprite.lifeTime = 10;
+			cells[prevY][c].sprite.stepX = (cells[destY][c].x - cells[prevY][c].x) / 5;
+			cells[prevY][c].sprite.stepY = (cells[destY][c].y - cells[prevY][c].y) / 5;
+			cells[prevY][c].sprite.lifeTime = 5;
 			cells[prevY][c].sprite.cellC = c;
 			cells[prevY][c].sprite.cellR = destY;
 			cells[prevY][c].sprite.active = true;
 			cells[destY][c].transition = 1;
 			cells[prevY][c].sprite = null;
 			gy = prevY;
-			//prevY--;
 		}
+	}
+	
+	function findMatches(r, c)
+	{
+		path.enqueue(cells[r][c]);
+		var val = cells[r][c].sprite.value;
+		var matches = [];
+		while( !path.isEmpty() )
+		{
+			var cell = path.dequeue();
+			matches.push(cell);
+			cell.sprite.matched = true;
+			var cr = cell.sprite.cellR;
+			var cc = cell.sprite.cellC;
+			cr++;
+			if( cr < fillRow && cells[cr][cc] != null && cells[cr][cc].sprite != null && cells[cr][cc].sprite.value == val && cells[cr][cc].sprite.matched == false )
+			{
+				cells[cr][cc].sprite.matched = true;
+				path.enqueue(cells[cr][cc]);
+			}
+			cr-=2;
+			if( cr >= 0 && cells[cr][cc] != null && cells[cr][cc].sprite != null && cells[cr][cc].sprite.value == val && cells[cr][cc].sprite.matched == false )
+			{
+				cells[cr][cc].sprite.matched = true;
+				path.enqueue(cells[cr][cc]);
+			}
+			cr++;
+			cc++;
+			if( cc < gridX && cells[cr][cc] != null && cells[cr][cc].sprite != null && cells[cr][cc].sprite.value == val && cells[cr][cc].sprite.matched == false )
+			{
+				cells[cr][cc].sprite.matched = true;
+				path.enqueue(cells[cr][cc]);
+			}
+			cc-=2;
+			if( cc >= 0 && cells[cr][cc] != null && cells[cr][cc].sprite != null && cells[cr][cc].sprite.value == val && cells[cr][cc].sprite.matched == false )
+			{
+				cells[cr][cc].sprite.matched = true;
+				path.enqueue(cells[cr][cc]);
+			}
+		}
+		if( matches.length >= 3 )
+			return matches;
+		else
+		{
+			for( var i=0; i<matches.length; i++ )
+			{
+				matches[i].sprite.matched = false;
+			}
+			return null;
+		}
+	
+	
+	
 	}
         function init() 
 		{
-            // code here.
-			alert( supportsAudio());
+			path = new Queue();
         	stage = new createjs.Stage("canvas");
 			var htmlStage = document.getElementById("canvas");
 			htmlStage.width = screenWidth;
 			htmlStage.height = screenHeight;
 			
 			
-			//stage.graphics.beginFill("aqua");
 			sprites = [];
 			cells = new Array(gridY); ;
 			var i = 0;
 			
-			for( var r=0; r<=fillRow; r++ ) 
+			for( var r=0; r<=gridY; r++ ) 
 			{
 				cells[r] = new Array(gridX);
 				for( var c=0; c<gridX; c++ )
@@ -88,43 +141,74 @@
 					{
 						sprites[spriteCount] = createSprite(r, c);
 						cells[r][c].sprite = sprites[spriteCount];
+						cells[r][c].sprite.cellC = c;
+						cells[r][c].sprite.cellR = r;
 						spriteCount++;
 					}
 				}
 			}
 			
-			
-			
-			document.getElementById("canvas").onclick=function(e) {
-				
+			document.getElementById("canvas").onclick=function(e) {				
+				clicked = true;		// a sprite was clicked...
 				var gx, gy;
 				
-				gx = parseInt(e.clientX / gridWidth);
+				gx = parseInt((e.clientX - 400)/ gridWidth);
 				gy = parseInt(e.clientY / gridHeight);
 				
 				if( gy == fillRow || cells[gy][gx].sprite == null )
+				{
+					clicked = false;
 					return;
-				clicked = true;
-				//document.getElementById('audiotag1').play();
-
-				clickSound('audiotag1');
+				}
 				
-				for( var x = gx + 1; x < gridX; x++ )
+				var matchingCells = findMatches(gy, gx);
+				if( matchingCells != null )
 				{
-					if( cells[gy][x].sprite != null && cells[gy][gx].sprite.value == cells[gy][x].sprite.value )
-						removeSprite(gy, x);
-					else 
-						break;
+					for( var i=0; i<matchingCells.length; i++ )
+					{
+						removeSprite(matchingCells[i].sprite.cellR, matchingCells[i].sprite.cellC); 
+					}
+					clickSound('audiotag1');
 				}
-				for( var x = gx - 1; x >= 0; x-- )
+				else
 				{
-					if( cells[gy][x].sprite != null && cells[gy][gx].sprite.value == cells[gy][x].sprite.value )
-						removeSprite(gy, x);
-					else 
-						break;
+					// play not enough sprites sound...
 				}
-				removeSprite(gy, gx);
-													
+				//set sprites in motion if necessary 
+				var c = 0;
+				while( c < gridX )
+				{
+					var r = fillRow - 1;
+					var r2;
+					while( r >= 1 )
+					{
+						if( cells[r][c].sprite == null )
+						{
+							r2 = r-1;
+							while( r2 >= 0 )
+							{
+								if( cells[r2][c].sprite != null )
+								{
+									cells[r2][c].sprite.active = true;
+									cells[r2][c].sprite.cellR = r;
+									cells[r2][c].sprite.cellC = c;
+									cells[r2][c].sprite.stepX = 0;
+									cells[r2][c].sprite.stepY = (cells[r][c].y - cells[r2][c].y) / 10;
+									cells[r2][c].sprite.lifeTime = 10;
+									cells[r][c].transition = 1;
+									cells[r2][c].sprite = null;
+									r2 = -1;
+								}
+								r2--;
+							}
+						}
+						r--;
+					}
+					c++;
+				}
+				
+				
+				
 				clicked = false;
 			};
 			
@@ -134,9 +218,11 @@
 				clicked = true;
 				if( fillRowX == gridX )  //filled in bottom row
 				{
+					/*
 					fillRowX = 0;
 					/* push up */
-					for( var r = 1000; r<gridY; r++ )
+					/*
+					for( var r = 1; r<gridY; r++ )
 					{
 						for( var c=0; c<gridX; c++ )
 						{
@@ -144,16 +230,19 @@
 							cells[r-1][c].transition = cells[r][c].transition;
 						}
 					}
-					for( var i=spriteCount; i<spriteCount; i++ )
+					for( var i=0; i<spriteCount; i++ )
 					{
 						if( sprites[i] != null && sprites[i].circle != null )
 							sprites[i].circle.y -= gridHeight;						
 					}
+					*/
 				}
-				else	if( fillRowX < gridX )
+				else if( fillRowX < gridX )
 				{
 					sprites[spriteCount] = createSprite(fillRow, fillRowX);
 					cells[fillRow][fillRowX].sprite = sprites[spriteCount];
+					cells[fillRow][fillRowX].sprite.cellC = fillRowX;
+					cells[fillRow][fillRowX].sprite.cellR = fillRow;
 					spriteCount++;
 					fillRowX = fillRowX + 1;
 				}
@@ -162,12 +251,30 @@
 			
 			setInterval(function()
 			{
-				if( clicked || pause > 0 )
+				if( clicked == true || pause > 0 )
 					return;
 				for( var i = 0; i<sprites.length; i++ )
 				{
 					if( sprites[i].active == false )
-						continue;
+					{
+						//check beneath and start moving if empty..
+						/*
+						var r = sprites[i].cellR+1;
+						if( r == fillRow ) continue;
+						var c = sprites[i].cellC;
+						if( cells[r][c].sprite == null )
+						{
+							cells[r-1][c].sprite.stepX = (cells[r][c].x - cells[r-1][c].x) / 10;
+							cells[r-1][c].sprite.stepY = (cells[r][c].y - cells[r-1][c].y) / 10;
+							cells[r-1][c].sprite.lifeTime = 10;
+							cells[r-1][c].sprite.cellC = c;
+							cells[r-1][c].sprite.cellR = r;
+							cells[r-1][c].sprite.active = true;
+							cells[r][c].transition = 1;
+							cells[r-1][c].sprite = null;
+						} */
+						continue;					
+					}
 					sprites[i].lifeTime--;
 					if( sprites[i].lifeTime <= 0 )
 					{
