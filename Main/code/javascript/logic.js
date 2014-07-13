@@ -33,29 +33,6 @@
 		cells[r][c].sprite = null;
 				
 		return;		
-		var prevY;
-				
-		for( prevY=r-1;prevY >= 0;prevY-- )
-		{
-			if(cells[prevY][c].sprite == null)
-			{
-				continue;
-			}
-			var destY = fillRow-1;
-			while( cells[destY][c].sprite != null || cells[destY][c].transition != 0)
-			{
-				destY--;
-			}
-			cells[prevY][c].sprite.stepX = (cells[destY][c].x - cells[prevY][c].x) / 5;
-			cells[prevY][c].sprite.stepY = (cells[destY][c].y - cells[prevY][c].y) / 5;
-			cells[prevY][c].sprite.lifeTime = 5;
-			cells[prevY][c].sprite.cellC = c;
-			cells[prevY][c].sprite.cellR = destY;
-			cells[prevY][c].sprite.active = true;
-			cells[destY][c].transition = 1;
-			cells[prevY][c].sprite = null;
-			gy = prevY;
-		}
 	}
 	
 	function findMatches(r, c)
@@ -153,7 +130,7 @@
 
 				var gx, gy;
 				
-				gx = parseInt((e.clientX - 400)/ gridWidth);
+				gx = parseInt((e.clientX - 400 - 8)/ gridWidth);  //padding = 8, margin = 400
 				gy = parseInt(e.clientY / gridHeight);
 				
 				if( gy == fillRow || cells[gy][gx].sprite == null )
@@ -164,55 +141,52 @@
 				
 				var matchingCells = findMatches(gy, gx);
 				if( matchingCells != null )
-
-				createBasicExplosion(gx, gy, spriteColors[cells[gy][gx].sprite.value]);
-\
-				clickSound('audiotag1');
-				
-				for( var x = gx + 1; x < gridX; x++ )
 				{
-					for( var i=0; i<matchingCells.length; i++ )
-					{
-						removeSprite(matchingCells[i].sprite.cellR, matchingCells[i].sprite.cellC); 
-					}
+					createBasicExplosion(gx, gy, spriteColors[cells[gy][gx].sprite.value]);
 					clickSound('audiotag1');
+				
+						for( var i=0; i<matchingCells.length; i++ )
+						{
+							removeSprite(matchingCells[i].sprite.cellR, matchingCells[i].sprite.cellC); 
+						}
+						clickSound('audiotag1');
 				}
 				else
 				{
 					// play not enough sprites sound...
 				}
 				//set sprites in motion if necessary 
-				var c = 0;
-				while( c < gridX )
-				{
-					var r = fillRow - 1;
-					var r2;
-					while( r >= 1 )
+					var c = 0;
+					while( c < gridX )
 					{
-						if( cells[r][c].sprite == null )
+						var r = fillRow - 1;
+						var r2;
+						while( r >= 1 )
 						{
-							r2 = r-1;
-							while( r2 >= 0 )
+							if( cells[r][c].sprite == null )
 							{
-								if( cells[r2][c].sprite != null )
+								r2 = r-1;
+								while( r2 >= 0 )
 								{
-									cells[r2][c].sprite.active = true;
-									cells[r2][c].sprite.cellR = r;
-									cells[r2][c].sprite.cellC = c;
-									cells[r2][c].sprite.stepX = 0;
-									cells[r2][c].sprite.stepY = (cells[r][c].y - cells[r2][c].y) / 10;
-									cells[r2][c].sprite.lifeTime = 10;
-									cells[r][c].transition = 1;
-									cells[r2][c].sprite = null;
-									r2 = -1;
+									if( cells[r2][c].sprite != null )
+									{
+										cells[r2][c].sprite.active = true;
+										cells[r2][c].sprite.cellR = r;
+										cells[r2][c].sprite.cellC = c;
+										cells[r2][c].sprite.stepX = 0;
+										cells[r2][c].sprite.stepY = (cells[r][c].y - cells[r2][c].y) / 5;
+										cells[r2][c].sprite.lifeTime = 5;
+										cells[r][c].transition = 1;
+										cells[r2][c].sprite = null;
+										r2 = -1;
+									}
+									r2--;
 								}
-								r2--;
 							}
+							r--;
 						}
-						r--;
+						c++;
 					}
-					c++;
-				}
 				
 				
 				
@@ -254,7 +228,7 @@
 					fillRowX = fillRowX + 1;
 				}
 				clicked = false;
-			}, 300000);
+			}, 1000);
 			
 			setInterval(function()
 			{
@@ -263,25 +237,7 @@
 				for( var i = 0; i<sprites.length; i++ )
 				{
 					if( sprites[i].active == false )
-					{
-						//check beneath and start moving if empty..
-						/*
-						var r = sprites[i].cellR+1;
-						if( r == fillRow ) continue;
-						var c = sprites[i].cellC;
-						if( cells[r][c].sprite == null )
-						{
-							cells[r-1][c].sprite.stepX = (cells[r][c].x - cells[r-1][c].x) / 10;
-							cells[r-1][c].sprite.stepY = (cells[r][c].y - cells[r-1][c].y) / 10;
-							cells[r-1][c].sprite.lifeTime = 10;
-							cells[r-1][c].sprite.cellC = c;
-							cells[r-1][c].sprite.cellR = r;
-							cells[r-1][c].sprite.active = true;
-							cells[r][c].transition = 1;
-							cells[r-1][c].sprite = null;
-						} */
 						continue;					
-					}
 					sprites[i].lifeTime--;
 					if( sprites[i].lifeTime <= 0 )
 					{
