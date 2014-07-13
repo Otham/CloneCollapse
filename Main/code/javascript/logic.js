@@ -1,6 +1,4 @@
-	
-    
-    var stage; 
+	var stage; 
 	var cells;
 	var sprites;
     var spriteColors = ["Red", "Green", "Blue","Yellow", "Orange", "Purple"];
@@ -11,10 +9,10 @@
 	var fillRow = 12;
 	var fillRowX = 0;
 	var spriteCount = 0;
-	var pause = 0;
-	
+	var pause = 0;	
 	var path;
 	
+	var	context2D;
 	var	gridWidth = screenWidth / gridX;
 	var gridHeight = screenHeight / gridY;
 	var clicked = false;
@@ -119,6 +117,8 @@
 			var htmlStage = document.getElementById("canvas");
 			htmlStage.width = screenWidth;
 			htmlStage.height = screenHeight;
+			context2D = canvas.getContext("2d");
+
 			
 			
 			sprites = [];
@@ -150,6 +150,7 @@
 			
 			document.getElementById("canvas").onclick=function(e) {				
 				clicked = true;		// a sprite was clicked...
+
 				var gx, gy;
 				
 				gx = parseInt((e.clientX - 400)/ gridWidth);
@@ -163,6 +164,12 @@
 				
 				var matchingCells = findMatches(gy, gx);
 				if( matchingCells != null )
+
+				createBasicExplosion(gx, gy, spriteColors[cells[gy][gx].sprite.value]);
+\
+				clickSound('audiotag1');
+				
+				for( var x = gx + 1; x < gridX; x++ )
 				{
 					for( var i=0; i<matchingCells.length; i++ )
 					{
@@ -247,7 +254,7 @@
 					fillRowX = fillRowX + 1;
 				}
 				clicked = false;
-			}, 300);
+			}, 300000);
 			
 			setInterval(function()
 			{
