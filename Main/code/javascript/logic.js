@@ -10,6 +10,8 @@
 	var fillRowX = 0;
 	var spriteCount = 0;
 	var pause = 0;	
+	var cellRows = 26;
+	var cellOffset = 0;
 	var path;
 	
 	var	context2D;
@@ -95,14 +97,12 @@
 			htmlStage.width = screenWidth;
 			htmlStage.height = screenHeight;
 			context2D = canvas.getContext("2d");
-
-			
 			
 			sprites = [];
 			cells = new Array(gridY); ;
 			var i = 0;
 			
-			for( var r=0; r<=gridY; r++ ) 
+			for( var r=0; r<=cellRows/*gridY*/; r++ ) 
 			{
 				cells[r] = new Array(gridX);
 				for( var c=0; c<gridX; c++ )
@@ -114,7 +114,7 @@
 					cells[r][c].sprite = null;
 					cells[r][c].transition = 0;
 					
-					if( r < fillRow && r > fillRow - 30)
+					if( r < fillRow && r > fillRow - 3)
 					{
 						sprites[spriteCount] = createSprite(r, c);
 						cells[r][c].sprite = sprites[spriteCount];
@@ -131,7 +131,7 @@
 				var gx, gy;
 				
 				gx = parseInt((e.clientX - 400 - 8)/ gridWidth);  //padding = 8, margin = 400
-				gy = parseInt(e.clientY / gridHeight);
+				gy = parseInt((e.clientY + cellOffset * gridHeight) / gridHeight);
 				
 				if( gy == fillRow || cells[gy][gx].sprite == null )
 				{
@@ -199,8 +199,23 @@
 				clicked = true;
 				if( fillRowX == gridX )  //filled in bottom row
 				{
-					/*
 					fillRowX = 0;
+					fillRow++;
+					cellOffset++;
+					if( cellOffset >= 11 )
+					{
+						var win = true;
+						var r = cellOffset - 1;
+						for( var c=0; c<gridX; c++ )
+						{
+							if( cells[r][c].sprite != null ) 
+								win = false;
+						}
+						if( win == false )
+							alert( "You Lose!!!" );
+						if( cellOffset == 15 )
+							alert( "You Win!!!" );
+					}
 					/* push up */
 					/*
 					for( var r = 1; r<gridY; r++ )
@@ -211,12 +226,12 @@
 							cells[r-1][c].transition = cells[r][c].transition;
 						}
 					}
+					*/
 					for( var i=0; i<spriteCount; i++ )
 					{
 						if( sprites[i] != null && sprites[i].circle != null )
 							sprites[i].circle.y -= gridHeight;						
 					}
-					*/
 				}
 				else if( fillRowX < gridX )
 				{
@@ -230,14 +245,25 @@
 				clicked = false;
 			}, 1000);
 			
+			
+			var shakeR = [-2, 0, 2, 0];
+			var shakeC = [0, 2, 0, -2];
 			setInterval(function()
 			{
 				if( clicked == true || pause > 0 )
 					return;
 				for( var i = 0; i<sprites.length; i++ )
 				{
+					sprites[i].animIndex++;
 					if( sprites[i].active == false )
+					{
+						if( sprites[i].circle != null && cells[sprites[i].cellR][sprites[i].cellC].sprite != null )
+						{
+							sprites[i].circle.x = cells[sprites[i].cellR][sprites[i].cellC].x + shakeC[sprites[i].animIndex % 3];
+							sprites[i].circle.y = -( cellOffset * gridHeight ) + cells[sprites[i].cellR][sprites[i].cellC].y + shakeR[sprites[i].animIndex % 3];
+						}
 						continue;					
+					}
 					sprites[i].lifeTime--;
 					if( sprites[i].lifeTime <= 0 )
 					{

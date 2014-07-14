@@ -13,6 +13,7 @@
 		sp.cellC = 0;
 		sp.cellR = 0;
 		sp.lifeTime = 0;
+		sp.animIndex = 0;
 		sp.value = color;
 		stage.addChild(circle);
 		return sp;
