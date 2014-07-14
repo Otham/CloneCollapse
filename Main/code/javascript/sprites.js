@@ -1,13 +1,14 @@
 	function createSprite(locY, locX) {
 		var sp = new Object();					
 		var circle = new createjs.Shape();
-		var color = parseInt(Math.random() * 6);
+		var color = parseInt(Math.random() * 5);
 		circle.graphics.beginStroke("black").beginFill(spriteColors[color]).drawCircle(0, 0, 25);
 						
 		circle.x = cells[locY][locX].x;
 		circle.y = cells[locY][locX].y;
 		circle.name = parseInt(Math.random() * 10000000);
 		sp.circle = circle;
+		sp.matched = false;
 		sp.active = false;
 		sp.cellC = 0;
 		sp.cellR = 0;
