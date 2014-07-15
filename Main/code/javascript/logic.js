@@ -13,6 +13,7 @@
 	var cellRows = 26;
 	var cellOffset = 0;
 	var path;
+	var shakeOn = false;
 	
 	var	context2D;
 	var	gridWidth = screenWidth / gridX;
@@ -23,7 +24,15 @@
 	{
 		pause = 1-pause;
 	}
-	
+	function setShake()
+	{
+		shakeOn = false;
+		for( var c=0; c<gridX; c++ )
+		{
+			if( cells[cellOffset][c].sprite != null ) 
+				shakeOn = true;
+		}
+	}
 	function removeSprite(r, c)
 	{
 		var removed = stage.removeChild(cells[r][c].sprite.circle);
@@ -33,7 +42,6 @@
 		cells[r][c].sprite.x = 0;
 		cells[r][c].sprite.y = 0;
 		cells[r][c].sprite = null;
-				
 		return;		
 	}
 	
@@ -189,10 +197,10 @@
 					}
 				
 				
+				setShake();
 				
 				clicked = false;
 			};
-			
 			
 			setInterval( function() {
 				if( pause > 0 || clicked == true ) return;
@@ -202,7 +210,7 @@
 					fillRowX = 0;
 					fillRow++;
 					cellOffset++;
-					if( cellOffset >= 11 )
+					if( cellOffset >= 10 ) 
 					{
 						var win = true;
 						var r = cellOffset - 1;
@@ -215,6 +223,8 @@
 							alert( "You Lose!!!" );
 						if( cellOffset == 15 )
 							alert( "You Win!!!" );
+							
+						setShake();
 					}
 					/* push up */
 					/*
@@ -243,7 +253,7 @@
 					fillRowX = fillRowX + 1;
 				}
 				clicked = false;
-			}, 1000);
+			}, 500);
 			
 			
 			var shakeR = [-2, 0, 2, 0];
@@ -259,8 +269,16 @@
 					{
 						if( sprites[i].circle != null && cells[sprites[i].cellR][sprites[i].cellC].sprite != null )
 						{
-							sprites[i].circle.x = cells[sprites[i].cellR][sprites[i].cellC].x + shakeC[sprites[i].animIndex % 3];
-							sprites[i].circle.y = -( cellOffset * gridHeight ) + cells[sprites[i].cellR][sprites[i].cellC].y + shakeR[sprites[i].animIndex % 3];
+							if( shakeOn )
+							{
+								sprites[i].circle.x = cells[sprites[i].cellR][sprites[i].cellC].x + shakeC[sprites[i].animIndex % 3];
+								sprites[i].circle.y = -( cellOffset * gridHeight ) + cells[sprites[i].cellR][sprites[i].cellC].y + shakeR[sprites[i].animIndex % 3];
+							}
+							else
+							{
+								sprites[i].circle.x = cells[sprites[i].cellR][sprites[i].cellC].x;
+								sprites[i].circle.y = -( cellOffset * gridHeight ) + cells[sprites[i].cellR][sprites[i].cellC].y;
+							}
 						}
 						continue;					
 					}
