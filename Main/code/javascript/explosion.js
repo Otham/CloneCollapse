@@ -96,7 +96,7 @@
 			
 			// particle will start at explosion center
 			particle.x = dx;
-			particle.y = dy;
+			particle.y = dy - cellOffset * gridHeight;
 			
 			particle.radius = randomFloat(minSize, maxSize);
 			
