@@ -153,11 +153,11 @@
 					createBasicExplosion(gx, gy, spriteColors[cells[gy][gx].sprite.value]);
 					clickSound('audiotag1');
 				
-						for( var i=0; i<matchingCells.length; i++ )
-						{
-							removeSprite(matchingCells[i].sprite.cellR, matchingCells[i].sprite.cellC); 
-						}
-						clickSound('audiotag1');
+					for( var i=0; i<matchingCells.length; i++ )
+					{
+						removeSprite(matchingCells[i].sprite.cellR, matchingCells[i].sprite.cellC); 
+					}
+					//clickSound('audiotag1');
 				}
 				else
 				{
