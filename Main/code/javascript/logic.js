@@ -99,6 +99,7 @@
 	}
         function init() 
 		{
+			playMusic();
 			path = new Queue();
         	stage = new createjs.Stage("canvas");
 			var htmlStage = document.getElementById("canvas");
