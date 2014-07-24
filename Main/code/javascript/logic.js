@@ -1,7 +1,7 @@
 	var stage; 
 	var cells;
 	var sprites;
-    var spriteColors = ["Red", "Green", "Blue","Yellow", "Orange", "Purple"];
+    var spriteColors = ["Pink", "Green", "Blue","Orange", "Purple", "Yellow"];
 	var screenWidth = 600;
 	var screenHeight = 650;
 	var gridX = 12;
@@ -14,6 +14,7 @@
 	var cellOffset = 0;
 	var path;
 	var shakeOn = false;
+	var timer = 180;
 	
 	var	context2D;
 	var	gridWidth = screenWidth / gridX;
@@ -93,10 +94,32 @@
 			}
 			return null;
 		}
-	
-	
-	
 	}
+	
+	function assignPosition(element, event) {
+		cX=event.clientX; cY=event.clientY;
+		if ($$(element).pageYOffset)
+		{
+			rX=$$(element).pageXOffset;
+			rY=$$(element).pageYOffset;
+		}
+		if (document.body)
+		{
+			rX=document.body.scrollLeft;
+			rY=document.body.scrollTop;
+		}
+		if (document.documentElement && document.documentElement.scrollTop)
+		{
+			rX=document.documentElement.scrollLeft;
+			rY=document.documentElement.scrollTop;
+		}
+		cX+=rX;
+		cY+=rY;
+		alert( cY + ", " + cX );
+		//$$(element).style.left=cX+"px";
+		//$$(element).style.top=cY+"px";
+	}	
+	
         function init() 
 		{
 			path = new Queue();
@@ -105,6 +128,16 @@
 			htmlStage.width = screenWidth;
 			htmlStage.height = screenHeight;
 			context2D = canvas.getContext("2d");
+
+			var infoStage = document.getElementById("info");
+			infoStage.width = screenWidth/3;
+			infoStage.height = screenHeight;
+			infoContext2D = canvas.getContext("2d");
+
+			var adStage = document.getElementById("ads");
+			adStage.width = screenWidth/3;
+			adStage.height = screenHeight;
+			adContext2D = canvas.getContext("2d");
 			
 			sprites = [];
 			cells = new Array(gridY); ;
@@ -134,11 +167,11 @@
 			}
 			
 			document.getElementById("canvas").onclick=function(e) {				
+				if( timer <= 0 ) return;
 				clicked = true;		// a sprite was clicked...
-
 				var gx, gy;
 				
-				gx = parseInt((e.clientX - 400 - 8)/ gridWidth);  //padding = 8, margin = 400
+				gx = parseInt((e.clientX - 338)/ gridWidth);  //padding = 8, margin = 400
 				gy = parseInt((e.clientY + cellOffset * gridHeight) / gridHeight);
 				
 				if( gy == fillRow || cells[gy][gx].sprite == null )
@@ -204,7 +237,7 @@
 			};
 			
 			setInterval( function() {
-				if( pause > 0 || clicked == true ) return;
+				if( pause > 0 || clicked == true || timer <= 0) return;
 				clicked = true;
 				if( fillRowX == gridX )  //filled in bottom row
 				{
@@ -221,10 +254,7 @@
 								win = false;
 						}
 						if( win == false )
-							alert( "You Lose!!!" );
-						if( cellOffset == 15 )
-							alert( "You Win!!!" );
-							
+							alert( "You Lose!!!" );							
 						setShake();
 					}
 					/* push up */
@@ -252,6 +282,10 @@
 					cells[fillRow][fillRowX].sprite.cellR = fillRow;
 					spriteCount++;
 					fillRowX = fillRowX + 1;
+					timer = timer - 1;
+					updateTimer(timer);
+					if( timer == 0 ) 
+						alert( "You WIN!");
 				}
 				clicked = false;
 			}, 500);

@@ -15,11 +15,20 @@
 		</style>
 	</head>
 	<body onLoad="init();">
+		<canvas id="ads"
+			style="border:2px solid #000000; background-color:LightYellow; padding:8px;margin-left:100px; border-radius:25px;">
+		</canvas> 
 		<canvas id="canvas"
-			style="border:2px solid #000000; background-color:LightBlue; padding:8px;margin-left:400px; border-radius:25px;">
+			style="border:2px solid #000000; background-color:LightBlue; padding:8px;margin-left:10px; border-radius:25px;">
+		</canvas> 
+		<canvas id="info"
+			style="border:2px solid #000000; background-color:LightGreen; padding:8px;margin-left:10px; border-radius:25px;">
 		</canvas> 
 		<div id="game-info">
-   			Current score: <p id="current">0</p><br>
+   			Current score: <span id="current">0</span><br>
+    	</div>
+		<div id="timer-info">
+   			Time Remaining: <span id="timer">0</span><br>
     	</div>
 		<input type="button" value="PAUSE!" onclick="pauseGame();" />
 	</body>
