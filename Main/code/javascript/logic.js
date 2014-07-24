@@ -231,7 +231,11 @@
 								win = false;
 						}
 						if( win == false )
-							alert( "You Lose!!!" );							
+						{
+							timer = 0;
+							alert( "You Lose!!!" );
+							return;
+						}
 						setShake();
 					}
 					/* push up */
