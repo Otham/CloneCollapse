@@ -43,6 +43,9 @@
 		cells[r][c].sprite.x = 0;
 		cells[r][c].sprite.y = 0;
 		cells[r][c].sprite = null;
+		//createBasicExplosion(r, c, spriteColors[cells[r][c].sprite.value]);
+		//clickSound('audiotag1');
+		
 		return;		
 	}
 	
@@ -160,13 +163,13 @@
 				var matchingCells = findMatches(gy, gx);
 				if( matchingCells != null )
 				{
-					createBasicExplosion(gx, gy, spriteColors[cells[gy][gx].sprite.value]);
-					clickSound('audiotag1');
-
 					score(matchingCells.length);
 					for( var i=0; i<matchingCells.length; i++ )
 					{
+						createBasicExplosion(matchingCells[i].sprite.cellR, matchingCells[i].sprite.cellC, spriteColors[cells[matchingCells[i].sprite.cellR][matchingCells[i].sprite.cellC].sprite.value]);
+						clickSound('audiotag1');
 						removeSprite(matchingCells[i].sprite.cellR, matchingCells[i].sprite.cellC); 
+
 					}
 					
 				}
