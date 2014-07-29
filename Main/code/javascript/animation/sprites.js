@@ -4,9 +4,12 @@ var canvas = document.getElementById("gameScreen"),
 
 canvas.width = canvas.height = 540;
 var colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"];
+var backgroundImage = new Image();
+backgroundImage.src = "mario.jpg";
+backgroundImage.onload = imageLoaded;
 
 //init smileys
-for(var i = 0; i < 100; i++){
+for(var i = 0; i < 40; i++){
     smileys[i] ={};
     smileys[i].x = Math.random()*400;
     smileys[i].y = Math.random()*400;
@@ -17,6 +20,21 @@ for(var i = 0; i < 100; i++){
 	smileys[i].frameTick = parseInt(Math.random() * smileys[i].frameLength[smileys[i].frame]);
 	smileys[i].xStep = 4 - Math.random() * 8;
 	smileys[i].yStep = 4 - Math.random() * 8;
+}
+
+function imageLoaded(ev) {
+    //element = document.getElementById("cancan");
+    //c = element.getContext("2d");
+
+    im = ev.target; // the image, assumed to be 200x200
+
+    // read the width and height of the canvas
+    width = 540;
+    height = 540;
+
+    // stamp the image on the left of the canvas:
+    ctx.drawImage(im, 0, 0);
+
 }
 
 function makeAnimatedSprite(color){
@@ -107,8 +125,9 @@ function makeAnimatedSprite(color){
 }
 
 function update(){
-    ctx.clearRect(0,0,540,540);
-    for(var i = 0, len = smileys.length; i < len; i++){
+    //ctx.clearRect(0,0,540,540);
+    ctx.drawImage(backgroundImage, 0, 0, 540, 540);
+	for(var i = 0, len = smileys.length; i < len; i++){
         smileys[i].x += smileys[i].xStep;
         smileys[i].y += smileys[i].yStep;
 		if( smileys[i].x <= 0 || smileys[i].x >= 400 )
@@ -128,5 +147,9 @@ function update(){
     }
     setTimeout(update,10);
 }
+var backgroundImage = new Image();
+backgroundImage.onload = imageLoaded;
+backgroundImage.width = 540;
+backgroundImage.src = "mario.jpg";
 
 update();
