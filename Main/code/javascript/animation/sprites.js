@@ -8,37 +8,47 @@ var bY = 0;
 
 canvas.width = canvas.height = 540;
 var colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"];
-var backgroundImage = new Image();
-backgroundImage.src = "mario.jpg";
-backgroundImage.onload = imageLoaded;
-
-//init smileys
-for(var i = 0; i < 40; i++){
-    smileys[i] ={};
-    smileys[i].x = Math.random()*400;
-    smileys[i].y = Math.random()*400;
-    smileys[i].sprite = makeAnimatedSprite(colors[i%colors.length]);
-	smileys[i].frame = parseInt(Math.random() * 4);
-	smileys[i].frames = 4;
-	smileys[i].frameLength = [20, 8, 50, 8];
-	smileys[i].frameTick = parseInt(Math.random() * smileys[i].frameLength[smileys[i].frame]);
-	smileys[i].xStep = 4 - Math.random() * 8;
-	smileys[i].yStep = 4 - Math.random() * 8;
-}
 
 function imageLoaded(ev) {
     //element = document.getElementById("cancan");
     //c = element.getContext("2d");
 
-    im = ev.target; // the image, assumed to be 200x200
-
+    im = ev.target; // the image
+	
+	
     // read the width and height of the canvas
     width = 540;
     height = 540;
 
     // stamp the image on the left of the canvas:
-    ctx.drawImage(im, 0, 0);
+    //ctx.drawImage(im, 0, 0);
 
+}
+
+function makeImageSprite() {
+    var canvasTemp = document.createElement("canvas");
+    var tCtx = canvasTemp.getContext("2d");
+    canvasTemp.width = canvasTemp.height = 150;
+	
+	tCtx.drawImage(spriteImage, 0, 0, 150, 150);
+	var imageData = tCtx.getImageData(0, 0, 150, 150);
+    var data = imageData.data;
+
+        // iterate over all pixels
+    for(var i = 0, n = data.length; i < n; i += 4) {
+        var red = data[i];
+        var green = data[i + 1];
+        var blue = data[i + 2];
+        var alpha = data[i + 3];
+		if( red < 20 && green < 20 && blue < 20 )
+			data[i+3] = 0;
+		else
+			data[i+3] = 255;
+		//data[i] = 255-red;
+    }
+	tCtx.putImageData(imageData, 0, 0);
+	var anim = [tCtx, tCtx, tCtx, tCtx];
+	return anim;
 }
 
 function makeAnimatedSprite(color){
@@ -153,10 +163,10 @@ function update(){
 			if( smileys[i].frame >= smileys[i].frames )
 				smileys[i].frame = 0;
 		}
-		if( i % 2 == 0 )
+		//if( i % 2 == 0 )
 			ctx.drawImage(smileys[i].sprite[smileys[i].frame].canvas, smileys[i].x, smileys[i].y);
-        else
-			ctx.drawImage(spriteImage, smileys[i].x, smileys[i].y, 100, 100 );
+        //else
+		//	ctx.drawImage(spriteImage, smileys[i].x, smileys[i].y, 100, 100 );
     }
     setTimeout(update,10);
 }
@@ -169,5 +179,23 @@ var spriteImage = new Image();
 spriteImage.onload = imageLoaded;
 spriteImage.src = "galaga.jpg";
 spriteImage.width = 540;
+
+//init smileys
+for(var i = 0; i < 40; i++){
+    smileys[i] ={};
+    smileys[i].x = Math.random()*400;
+    smileys[i].y = Math.random()*400;
+	if( i % 2 == 0 )
+		smileys[i].sprite = makeAnimatedSprite(colors[i%colors.length]);
+	else
+		smileys[i].sprite = makeImageSprite();
+	smileys[i].frame = parseInt(Math.random() * 4);
+	smileys[i].frames = 4;
+	smileys[i].frameLength = [20, 8, 50, 8];
+	smileys[i].frameTick = parseInt(Math.random() * smileys[i].frameLength[smileys[i].frame]);
+	smileys[i].xStep = 4 - Math.random() * 8;
+	smileys[i].yStep = 4 - Math.random() * 8;
+}
+
 
 update();
