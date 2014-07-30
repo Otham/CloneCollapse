@@ -153,7 +153,10 @@ function update(){
 			if( smileys[i].frame >= smileys[i].frames )
 				smileys[i].frame = 0;
 		}
-        ctx.drawImage(smileys[i].sprite[smileys[i].frame].canvas, smileys[i].x, smileys[i].y);
+		if( i % 2 == 0 )
+			ctx.drawImage(smileys[i].sprite[smileys[i].frame].canvas, smileys[i].x, smileys[i].y);
+        else
+			ctx.drawImage(spriteImage, smileys[i].x, smileys[i].y, 100, 100 );
     }
     setTimeout(update,10);
 }
@@ -161,5 +164,10 @@ var backgroundImage = new Image();
 backgroundImage.onload = imageLoaded;
 backgroundImage.width = 540;
 backgroundImage.src = "mario.jpg";
+
+var spriteImage = new Image();
+spriteImage.onload = imageLoaded;
+spriteImage.src = "galaga.jpg";
+spriteImage.width = 540;
 
 update();
