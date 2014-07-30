@@ -1,6 +1,10 @@
 var canvas = document.getElementById("gameScreen"),
     ctx = canvas.getContext("2d"),
     smileys = [];
+var bX = 10;
+var bXStep = 1;
+var bYStep = 1;
+var bY = 0;
 
 canvas.width = canvas.height = 540;
 var colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet"];
@@ -126,7 +130,13 @@ function makeAnimatedSprite(color){
 
 function update(){
     //ctx.clearRect(0,0,540,540);
-    ctx.drawImage(backgroundImage, 0, 0, 540, 540);
+    ctx.drawImage(backgroundImage, bX, bY, 540, 540);
+	bX += bXStep;
+	bY += bYStep;
+	if( bX > 20 || bX < -20 )
+		bXStep = -bXStep;
+	if( bY > 20 || bY < -20 )
+		bYStep = -bYStep;
 	for(var i = 0, len = smileys.length; i < len; i++){
         smileys[i].x += smileys[i].xStep;
         smileys[i].y += smileys[i].yStep;
